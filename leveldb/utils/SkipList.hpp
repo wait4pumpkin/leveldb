@@ -10,6 +10,7 @@
 
 #include <cstddef>
 #include <memory>
+#include <random>
 
 namespace lancer {
 namespace leveldb {
@@ -25,24 +26,24 @@ public:
     SkipList(const SkipList&) = delete;
     SkipList operator=(const SkipList&) = delete;
     
-    bool Search(const KeyType &&key, ValueType &&value)
-    {
-        return impl->Search(std::forward<const KeyType, ValueType>(key, value));
-    }
-    bool Insert(const KeyType &&key, const ValueType &&value)
-    {
-        return impl->Insert(std::forward<const KeyType, const ValueType>(key, value));
-    }
-    bool Remove(const KeyType &&key, ValueType &&value)
-    {
-        return impl->Remove(std::forward<const KeyType, ValueType>(key, value));
-    }
+    bool Search(const KeyType &key, ValueType &value) const;
+    bool Insert(const KeyType &key, const ValueType &value);
+    bool Remove(const KeyType &key, ValueType &value);
 
 private:
-    class SkipListImpl;
-    std::unique_ptr<SkipListImpl> impl;
-};
+    struct SkipListNode;
+
+    size_t randomHeight() const;
     
+    std::unique_ptr<std::unique_ptr<SkipListNode>[]> header_;
+    size_t level_;
+    
+    std::default_random_engine generator_;
+    std::uniform_int_distribution<int> distribution_;
+};
+
+#include "details/SkipList.cpp"
+
 } // namespace utils
 } // namespace leveldb
 } // namespace lancer
