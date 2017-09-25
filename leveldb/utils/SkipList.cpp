@@ -9,6 +9,7 @@
 #include "SkipList.hpp"
 
 #include <memory>
+#include <random>
 
 #include "macros.hpp"
 
@@ -116,7 +117,7 @@ bool SkipList<KeyType, ValueType, Comparator, MAX_LEVEL>::SkipListImpl::Insert(c
     unique_ptr<SkipListNode> memo[MAX_LEVEL];
     for (auto n = level_; n >= 0; --n)
     {
-        while (node->forward[n] && Comparator(key, node->forward[n]->) > 0)
+        while (node->forward[n] && Comparator(key, node->forward[n]->key) > 0)
         {
             node = node->forward[n];
         }
@@ -144,11 +145,13 @@ bool SkipList<KeyType, ValueType, Comparator, MAX_LEVEL>::SkipListImpl::Insert(c
 template<typename KeyType, typename ValueType, typename Comparator, size_t MAX_LEVEL>
 bool SkipList<KeyType, ValueType, Comparator, MAX_LEVEL>::SkipListImpl::Remove(const KeyType &key, ValueType &value)
 {
+    
+    
     return false;
 }
 
 template<typename KeyType, typename ValueType, typename Comparator, size_t MAX_LEVEL>
-size_t randomHeight() const
+size_t SkipList<KeyType, ValueType, Comparator, MAX_LEVEL>::SkipListImpl::randomHeight() const
 {
     auto height = 1;
     while (height < MAX_LEVEL && distribution_(generator_) == K_BRANCHING)
